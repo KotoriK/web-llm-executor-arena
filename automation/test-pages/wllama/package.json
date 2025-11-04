@@ -1,0 +1,17 @@
+{
+  "name": "wllama-test-page",
+  "version": "1.0.0",
+  "description": "Test page for @wllama/wllama runtime",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@wllama/wllama": "^1.8.0"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0"
+  }
+}
