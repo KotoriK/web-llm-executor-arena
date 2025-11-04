@@ -1,0 +1,4 @@
+packages:
+  - 'automation'
+  - 'automation/test-pages/*'
+  - 'website'

@@ -1,22 +1,8 @@
 import * as webllm from '@mlc-ai/web-llm';
+import { createLogger, createStatusUpdater } from '../shared/utils.js';
 
-// Logging utility
-function log(message, type = 'info') {
-  const logEl = document.getElementById('log');
-  const entry = document.createElement('div');
-  entry.className = `log-entry ${type}`;
-  entry.textContent = `[${new Date().toISOString().substr(11, 12)}] ${message}`;
-  logEl.appendChild(entry);
-  logEl.scrollTop = logEl.scrollHeight;
-  console.log(message);
-}
-
-// Status update utility
-function setStatus(message, type = 'loading') {
-  const statusEl = document.getElementById('status');
-  statusEl.textContent = message;
-  statusEl.className = `status ${type}`;
-}
+const log = createLogger('log');
+const setStatus = createStatusUpdater('status');
 
 /**
  * Web-LLM Test API Implementation

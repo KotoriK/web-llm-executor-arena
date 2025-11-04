@@ -1,22 +1,8 @@
 import { Wllama } from '@wllama/wllama';
+import { checkWasmSIMD, createLogger, createStatusUpdater } from '../shared/utils.js';
 
-// Logging utility
-function log(message, type = 'info') {
-  const logEl = document.getElementById('log');
-  const entry = document.createElement('div');
-  entry.className = `log-entry ${type}`;
-  entry.textContent = `[${new Date().toISOString().substr(11, 12)}] ${message}`;
-  logEl.appendChild(entry);
-  logEl.scrollTop = logEl.scrollHeight;
-  console.log(message);
-}
-
-// Status update utility
-function setStatus(message, type = 'loading') {
-  const statusEl = document.getElementById('status');
-  statusEl.textContent = message;
-  statusEl.className = `status ${type}`;
-}
+const log = createLogger('log');
+const setStatus = createStatusUpdater('status');
 
 /**
  * Wllama Test API Implementation
@@ -53,7 +39,7 @@ class WllamaTestAPI {
       });
 
       // Check WASM SIMD support
-      const simdSupported = await this.checkWasmSIMD();
+      const simdSupported = await checkWasmSIMD();
       this.runtimeInfo.backend = simdSupported ? 'wasm-simd' : 'wasm';
       
       log(`WASM SIMD support: ${simdSupported ? 'Yes' : 'No'}`);
@@ -169,17 +155,7 @@ class WllamaTestAPI {
     }
   }
 
-  // Helper: Check WASM SIMD support
-  async checkWasmSIMD() {
-    try {
-      return WebAssembly.validate(new Uint8Array([
-        0, 97, 115, 109, 1, 0, 0, 0, 1, 5, 1, 96, 0, 1, 123, 3,
-        2, 1, 0, 10, 10, 1, 8, 0, 65, 0, 253, 15, 253, 98, 11
-      ]));
-    } catch {
-      return false;
-    }
-  }
+
 }
 
 // Initialize and expose API

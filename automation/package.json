@@ -4,17 +4,17 @@
   "description": "Automated testing framework for LLM runtime performance benchmarking",
   "type": "module",
   "scripts": {
-    "test": "playwright test",
+    "test": "playwright test tests/runtime.test.ts",
+    "test:all": "playwright test",
     "test:demo": "playwright test tests/demo.test.ts",
     "test:wllama": "playwright test tests/wllama.test.ts",
     "test:webllm": "playwright test tests/webllm.test.ts",
     "test:transformers": "playwright test tests/transformers.test.ts",
     "test:mediapipe": "playwright test tests/mediapipe.test.ts",
+    "test:unified": "playwright test tests/runtime.test.ts",
     "test:headed": "playwright test --headed",
     "test:debug": "playwright test --debug",
-    "serve": "http-server test-pages -p 3000 -c-1 --cors",
-    "setup": "echo 'Installing test page dependencies...' && cd test-pages/wllama && pnpm install || npm install",
-    "setup:webllm": "cd test-pages/webllm && pnpm install || npm install"
+    "serve": "http-server test-pages -p 3000 -c-1 --cors"
   },
   "keywords": [
     "playwright",

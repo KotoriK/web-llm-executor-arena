@@ -1,0 +1,25 @@
+{
+  "name": "web-llm-executor-arena",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Performance benchmarking for client-side LLM runtimes",
+  "scripts": {
+    "install:all": "pnpm install",
+    "install:browsers": "cd automation && pnpm exec playwright install",
+    "test": "cd automation && pnpm test",
+    "test:demo": "cd automation && pnpm test:demo",
+    "test:wllama": "cd automation && pnpm test:wllama",
+    "test:webllm": "cd automation && pnpm test:webllm",
+    "cache:models": "node scripts/cache-models.js"
+  },
+  "keywords": [
+    "llm",
+    "benchmark",
+    "performance",
+    "webgpu",
+    "wasm"
+  ],
+  "author": "KotoriK",
+  "license": "MIT",
+  "devDependencies": {}
+}

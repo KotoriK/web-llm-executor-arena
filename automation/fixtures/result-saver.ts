@@ -1,4 +1,5 @@
-import * as fs from 'fs';
+import * as fs from 'fs/promises';
+import * as fsSync from 'fs';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -75,9 +76,7 @@ export async function saveTestResult(result: TestResult): Promise<string> {
   const yearMonth = `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, '0')}`;
   const resultsDir = path.join(__dirname, '../../results/raw', yearMonth);
   
-  if (!fs.existsSync(resultsDir)) {
-    fs.mkdirSync(resultsDir, { recursive: true });
-  }
+  await fs.mkdir(resultsDir, { recursive: true });
 
   // Generate filename: {runtime}_{browser}_{platform}_{timestamp}.json
   const timestamp = now.toISOString().replace(/[:.]/g, '-').slice(0, -5);
@@ -89,7 +88,7 @@ export async function saveTestResult(result: TestResult): Promise<string> {
   const filepath = path.join(resultsDir, filename);
 
   // Write file
-  fs.writeFileSync(filepath, JSON.stringify(result, null, 2), 'utf-8');
+  await fs.writeFile(filepath, JSON.stringify(result, null, 2), 'utf-8');
   
   console.log(`Test result saved to: ${filepath}`);
   return filepath;
@@ -98,33 +97,37 @@ export async function saveTestResult(result: TestResult): Promise<string> {
 /**
  * Load test results from a file
  */
-export function loadTestResult(filepath: string): TestResult {
-  const content = fs.readFileSync(filepath, 'utf-8');
+export async function loadTestResult(filepath: string): Promise<TestResult> {
+  const content = await fs.readFile(filepath, 'utf-8');
   return JSON.parse(content);
 }
 
 /**
  * List all test results
  */
-export function listTestResults(runtimeFilter?: string): string[] {
+export async function listTestResults(runtimeFilter?: string): Promise<string[]> {
   const rawDir = path.join(__dirname, '../../results/raw');
   
-  if (!fs.existsSync(rawDir)) {
+  try {
+    await fs.access(rawDir);
+  } catch {
     return [];
   }
 
   const results: string[] = [];
-  const yearMonths = fs.readdirSync(rawDir);
+  const yearMonths = await fs.readdir(rawDir);
   
   for (const yearMonth of yearMonths) {
     const yearMonthDir = path.join(rawDir, yearMonth);
-    if (!fs.statSync(yearMonthDir).isDirectory()) continue;
+    const stat = await fs.stat(yearMonthDir);
+    if (!stat.isDirectory()) continue;
     
-    const files = fs.readdirSync(yearMonthDir)
+    const files = await fs.readdir(yearMonthDir);
+    const filtered = files
       .filter(f => f.endsWith('.json'))
       .filter(f => !runtimeFilter || f.startsWith(runtimeFilter));
     
-    results.push(...files.map(f => path.join(yearMonthDir, f)));
+    results.push(...filtered.map(f => path.join(yearMonthDir, f)));
   }
   
   return results.sort().reverse(); // Most recent first
