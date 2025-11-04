@@ -13,7 +13,8 @@
     "test:headed": "playwright test --headed",
     "test:debug": "playwright test --debug",
     "serve": "http-server test-pages -p 3000 -c-1 --cors",
-    "setup": "echo 'Installing test page dependencies...' && cd test-pages/wllama && pnpm install || npm install"
+    "setup": "echo 'Installing test page dependencies...' && cd test-pages/wllama && pnpm install || npm install",
+    "setup:webllm": "cd test-pages/webllm && pnpm install || npm install"
   },
   "keywords": [
     "playwright",
