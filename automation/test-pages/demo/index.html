@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo Runtime Test</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 0 20px;
+      line-height: 1.6;
+    }
+    .status {
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+    .status.ready { background: #d4edda; color: #155724; }
+    .status.loading { background: #fff3cd; color: #856404; }
+    .status.error { background: #f8d7da; color: #721c24; }
+    .metrics {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 4px;
+      margin: 15px 0;
+    }
+    .metrics dt {
+      font-weight: 600;
+      margin-top: 8px;
+    }
+    .metrics dd {
+      margin-left: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Demo Runtime Test Page</h1>
+  <div id="status" class="status loading">Initializing...</div>
+  
+  <div id="info" style="display: none;">
+    <h2>Test Information</h2>
+    <dl class="metrics">
+      <dt>Runtime:</dt>
+      <dd id="runtime-name">-</dd>
+      <dt>Version:</dt>
+      <dd id="runtime-version">-</dd>
+      <dt>Backend:</dt>
+      <dd id="runtime-backend">-</dd>
+    </dl>
+  </div>
+
+  <script type="module">
+    // Demo implementation of TestPageAPI
+    class DemoTestAPI {
+      constructor() {
+        this.initialized = false;
+        this.metrics = {
+          loadTime: 0,
+          ttft: 0,
+          tokensPerSecond: 0,
+        };
+        this.runtimeInfo = {
+          name: 'demo',
+          version: '1.0.0',
+          backend: 'mock',
+        };
+      }
+
+      async initialize(config) {
+        console.log('Initializing with config:', config);
+        await this.simulateDelay(500);
+        this.initialized = true;
+        return true;
+      }
+
+      async loadModel(modelUrl) {
+        console.log('Loading model:', modelUrl);
+        const startTime = performance.now();
+        await this.simulateDelay(1000); // Simulate model loading
+        this.metrics.loadTime = performance.now() - startTime;
+        return true;
+      }
+
+      async generate(prompt, options = {}) {
+        if (!this.initialized) {
+          throw new Error('Runtime not initialized');
+        }
+
+        console.log('Generating with prompt:', prompt);
+        const startTime = performance.now();
+        
+        // Simulate TTFT
+        await this.simulateDelay(100);
+        const firstTokenTime = performance.now();
+        this.metrics.ttft = firstTokenTime - startTime;
+
+        // Simulate token generation
+        const tokens = options.maxTokens || 50;
+        await this.simulateDelay(tokens * 10); // 10ms per token
+        
+        const totalTime = performance.now() - startTime;
+        this.metrics.tokensPerSecond = tokens / (totalTime / 1000);
+
+        return `This is a demo response to: "${prompt}". Generated ${tokens} tokens.`;
+      }
+
+      getMetrics() {
+        return { ...this.metrics };
+      }
+
+      getRuntimeInfo() {
+        return { ...this.runtimeInfo };
+      }
+
+      async cleanup() {
+        console.log('Cleaning up...');
+        this.initialized = false;
+        await this.simulateDelay(100);
+      }
+
+      // Helper method
+      simulateDelay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+      }
+    }
+
+    // Initialize and expose API
+    window.testAPI = new DemoTestAPI();
+    
+    // Update UI
+    const statusEl = document.getElementById('status');
+    const infoEl = document.getElementById('info');
+    
+    try {
+      await window.testAPI.initialize({});
+      statusEl.textContent = 'Ready for testing';
+      statusEl.className = 'status ready';
+      
+      infoEl.style.display = 'block';
+      document.getElementById('runtime-name').textContent = window.testAPI.runtimeInfo.name;
+      document.getElementById('runtime-version').textContent = window.testAPI.runtimeInfo.version;
+      document.getElementById('runtime-backend').textContent = window.testAPI.runtimeInfo.backend;
+    } catch (error) {
+      statusEl.textContent = 'Error: ' + error.message;
+      statusEl.className = 'status error';
+      console.error('Initialization error:', error);
+    }
+  </script>
+</body>
+</html>

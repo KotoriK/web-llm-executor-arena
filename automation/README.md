@@ -9,23 +9,27 @@ Browser automation testing framework for testing LLM runtime performance.
 ```
 automation/
 ├── tests/              # Playwright 测试用例
-│   ├── wllama.test.ts
-│   ├── webllm.test.ts
-│   ├── transformers.test.ts
-│   └── mediapipe.test.ts
+│   ├── demo.test.ts   # Demo test (framework verification)
+│   ├── wllama.test.ts (TODO)
+│   ├── webllm.test.ts (TODO)
+│   ├── transformers.test.ts (TODO)
+│   └── mediapipe.test.ts (TODO)
 ├── fixtures/           # 测试固件和辅助函数
-│   ├── browser-info.ts
-│   ├── performance-monitor.ts
-│   └── model-tester.ts
+│   ├── browser-info.ts        # Browser capability detection
+│   ├── performance-monitor.ts # Performance tracking
+│   └── result-saver.ts        # Test result persistence
 ├── config/             # 测试配置
-│   ├── playwright.config.ts
-│   ├── models.config.ts
-│   └── test-scenarios.ts
+│   ├── playwright.config.ts   # Playwright configuration
+│   ├── models.config.ts       # Model URLs and configs
+│   └── test-scenarios.ts      # Test scenarios
 ├── test-pages/         # 各运行时的测试页面
-│   ├── wllama/
-│   ├── webllm/
-│   ├── transformers/
-│   └── mediapipe/
+│   ├── demo/          # Demo implementation
+│   ├── wllama/ (TODO)
+│   ├── webllm/ (TODO)
+│   ├── transformers/ (TODO)
+│   └── mediapipe/ (TODO)
+├── package.json       # Dependencies and scripts
+├── tsconfig.json      # TypeScript configuration
 └── README.md          # 本文件
 ```
 
