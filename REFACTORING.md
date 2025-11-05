@@ -9,12 +9,17 @@ This document describes the refactoring changes made to improve code organizatio
 - **Change**: Replaced synchronous `fs` calls with async `fs/promises`
 - **Benefit**: Better performance, non-blocking I/O
 
-### 2. Shared Test Page Utilities
+### 2. Shared Test Page Template System
 - **New Files**:
+  - `automation/test-pages/shared/template.html` - Base HTML template with placeholders
+  - `automation/test-pages/shared/generate-html.js` - Script to generate HTML from template
   - `automation/test-pages/shared/utils.js` - Common utilities (WASM SIMD check, logging, status updates)
   - `automation/test-pages/shared/styles.css` - Shared CSS for all test pages
   - `automation/test-pages/shared/test-api.d.ts` - TypeScript interface definitions
-- **Benefit**: DRY principle, consistent UI/UX across all test pages
+- **Benefit**: 
+  - Single source of truth for HTML structure
+  - DRY principle, consistent UI/UX across all test pages
+  - Easy to add new runtimes - just configure and regenerate
 
 ### 3. Unified Test API
 - **File**: `automation/test-pages/shared/test-api.d.ts`
@@ -74,20 +79,34 @@ const log = createLogger('log');
 
 #### Before
 ```html
+<!-- Each runtime has its own complete HTML file -->
 <head>
   <title>Test Page</title>
   <style>
     /* Hundreds of lines of duplicated CSS */
   </style>
 </head>
+<body>
+  <!-- Duplicated structure for each runtime -->
+</body>
 ```
 
 #### After
 ```html
+<!-- Single template file: automation/test-pages/shared/template.html -->
 <head>
-  <title>Test Page</title>
+  <title>{{TITLE}}</title>
   <link rel="stylesheet" href="../shared/styles.css">
 </head>
+<body>
+  <h1>{{HEADING}}</h1>
+  <!-- Shared structure with placeholders -->
+</body>
+```
+
+Generate HTML for all runtimes:
+```bash
+pnpm generate:html
 ```
 
 ### For Test Writers

@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Demo Runtime Test</title>
+  <title>{{TITLE}}</title>
   <link rel="stylesheet" href="../shared/styles.css">
 </head>
 <body>
-  <h1>Demo Runtime Test Page</h1>
-  <p>Framework verification with mock implementation</p>
+  <h1>{{HEADING}}</h1>
+  <p>{{DESCRIPTION}}</p>
   
   <div id="status" class="status loading">Initializing...</div>
   
@@ -21,7 +21,7 @@
       <dd id="runtime-version">-</dd>
       <dt>Backend:</dt>
       <dd id="runtime-backend">-</dd>
-      
+      {{EXTRA_INFO}}
     </dl>
   </div>
 
