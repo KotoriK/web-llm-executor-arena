@@ -10,6 +10,7 @@
     "test:demo": "cd automation && pnpm test:demo",
     "test:wllama": "cd automation && pnpm test:wllama",
     "test:webllm": "cd automation && pnpm test:webllm",
+    "test:transformers": "cd automation && pnpm test:transformers",
     "cache:models": "node scripts/cache-models.js",
     "generate:html": "node automation/test-pages/shared/generate-html.js"
   },

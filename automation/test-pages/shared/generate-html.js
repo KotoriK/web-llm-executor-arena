@@ -36,6 +36,19 @@ const runtimeConfigs = {
       <dt>GPU Info:</dt>
       <dd id="gpu-info">-</dd>`,
   },
+  transformers: {
+    TITLE: 'Transformers.js Test Page',
+    HEADING: '@huggingface/transformers Test Page',
+    DESCRIPTION: 'Testing Qwen2.5-0.5B-Instruct with ONNX Runtime (WASM/WebGPU/WebNN)',
+    EXTRA_INFO: `      <dt>Backend:</dt>
+      <dd id="backend">-</dd>
+      <dt>WASM SIMD:</dt>
+      <dd id="wasm-simd">-</dd>
+      <dt>WebGPU:</dt>
+      <dd id="webgpu">-</dd>
+      <dt>WebNN:</dt>
+      <dd id="webnn">-</dd>`,
+  },
 };
 
 async function generateHTML() {

@@ -29,6 +29,12 @@ const runtimeConfigs: RuntimeTestConfig[] = [
     modelKey: 'q0f32',
     quantization: 'q0f32',
   },
+  {
+    name: 'transformers',
+    path: '/transformers',
+    modelKey: 'fp32',
+    quantization: 'fp32',
+  },
 ];
 
 for (const runtime of runtimeConfigs) {
