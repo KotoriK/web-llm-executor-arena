@@ -2,6 +2,7 @@
   "name": "web-llm-executor-arena",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "description": "Performance benchmarking for client-side LLM runtimes",
   "scripts": {
     "install:all": "pnpm install",
@@ -13,7 +14,11 @@
     "test:transformers": "cd automation && pnpm test:transformers",
     "test:mediapipe": "cd automation && pnpm test:mediapipe",
     "cache:models": "node scripts/cache-models.js",
-    "generate:html": "node automation/test-pages/shared/generate-html.js"
+    "generate:html": "node automation/test-pages/shared/generate-html.js",
+    "validate:results": "node scripts/validate-results.js",
+    "aggregate:results": "node scripts/aggregate-results.js",
+    "export:results": "node scripts/export-results.js --format all",
+    "process:results": "pnpm validate:results && pnpm aggregate:results && pnpm export:results"
   },
   "keywords": [
     "llm",
@@ -24,5 +29,8 @@
   ],
   "author": "KotoriK",
   "license": "MIT",
-  "devDependencies": {}
+  "devDependencies": {
+    "ajv": "^8.12.0",
+    "ajv-formats": "^2.1.1"
+  }
 }

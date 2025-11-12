@@ -65,7 +65,12 @@ coverage/
 website/.astro/
 website/dist/
 
-# Results (keep schema and processed, but raw data might be large)
-# Uncomment if raw results are too large for git
-# results/raw/**/*.json
-# !results/raw/.gitkeep
+# Results - keep structure but exclude generated data
+results/raw/*.json
+results/processed/*.json
+results/processed/*.csv
+results/processed/*.md
+!results/raw/.gitkeep
+!results/processed/.gitkeep
+!results/schema.json
+!results/README.md
