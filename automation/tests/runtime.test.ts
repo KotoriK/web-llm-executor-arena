@@ -35,6 +35,12 @@ const runtimeConfigs: RuntimeTestConfig[] = [
     modelKey: 'fp32',
     quantization: 'fp32',
   },
+  {
+    name: 'mediapipe',
+    path: '/mediapipe',
+    modelKey: 'int8',
+    quantization: 'int8',
+  },
 ];
 
 for (const runtime of runtimeConfigs) {

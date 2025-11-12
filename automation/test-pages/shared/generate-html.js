@@ -49,6 +49,17 @@ const runtimeConfigs = {
       <dt>WebNN:</dt>
       <dd id="webnn">-</dd>`,
   },
+  mediapipe: {
+    TITLE: 'MediaPipe Test Page',
+    HEADING: '@mediapipe/tasks-genai Test Page',
+    DESCRIPTION: 'Testing Qwen2.5-0.5B-Instruct with TensorFlow Lite backend',
+    EXTRA_INFO: `      <dt>Backend:</dt>
+      <dd id="backend">-</dd>
+      <dt>WASM SIMD:</dt>
+      <dd id="wasm-simd">-</dd>
+      <dt>WebGPU:</dt>
+      <dd id="webgpu">-</dd>`,
+  },
 };
 
 async function generateHTML() {
