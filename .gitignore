@@ -1,0 +1,76 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+.yarn/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Build outputs
+dist/
+build/
+out/
+.next/
+.nuxt/
+.cache/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Test results
+test-results/
+playwright-report/
+playwright/.cache/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.log
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Model files (large)
+*.gguf
+*.onnx
+*.tflite
+*.bin
+
+# Playwright browsers (installed separately)
+.playwright/
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Lock files (keep one)
+# package-lock.json
+# yarn.lock
+# Keep pnpm-lock.yaml
+
+# Website specific
+website/.astro/
+website/dist/
+
+# Results - keep structure but exclude generated data
+results/raw/*.json
+results/processed/*.json
+results/processed/*.csv
+results/processed/*.md
+!results/raw/.gitkeep
+!results/processed/.gitkeep
+!results/schema.json
+!results/README.md
