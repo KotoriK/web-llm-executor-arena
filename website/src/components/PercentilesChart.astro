@@ -1,0 +1,131 @@
+---
+interface Props {
+  id: string;
+  data: any[];
+  metric: 'tokensPerSecond' | 'ttft' | 'loadTime';
+  title: string;
+  class?: string;
+}
+
+const { id, data, metric, title, class: className = '' } = Astro.props;
+
+// Format data for ECharts line chart with percentiles
+const runtimes = data.map(d => d.runtime);
+const meanData = data.map(d => d[metric].mean);
+const p50Data = data.map(d => d[metric].p50);
+const p90Data = data.map(d => d[metric].p90);
+const p95Data = data.map(d => d[metric].p95);
+const p99Data = data.map(d => d[metric].p99);
+
+// Format values based on metric type
+const formatValue = (val: number) => {
+  if (metric === 'loadTime') return (val / 1000).toFixed(1); // seconds
+  if (metric === 'ttft') return val.toFixed(0); // milliseconds
+  return val.toFixed(1); // tokens per second
+};
+
+const yAxisLabel = 
+  metric === 'loadTime' ? 'Time (seconds)' :
+  metric === 'ttft' ? 'Time (milliseconds)' :
+  'Tokens per Second';
+---
+
+<div class={`chart-container ${className}`}>
+  <div id={id} style="width: 100%; height: 400px;"></div>
+</div>
+
+<script define:vars={{ id, runtimes, meanData, p50Data, p90Data, p95Data, p99Data, title, yAxisLabel }}>
+  import * as echarts from 'echarts';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const chartDom = document.getElementById(id);
+    if (!chartDom) return;
+
+    const myChart = echarts.init(chartDom);
+    
+    const option = {
+      title: {
+        text: title,
+        left: 'center',
+        textStyle: {
+          fontSize: 18,
+          fontWeight: 'bold'
+        }
+      },
+      tooltip: {
+        trigger: 'axis'
+      },
+      legend: {
+        data: ['Mean', 'P50 (Median)', 'P90', 'P95', 'P99'],
+        top: 40
+      },
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+      },
+      xAxis: {
+        type: 'category',
+        data: runtimes,
+        axisLabel: {
+          interval: 0,
+          rotate: 30
+        }
+      },
+      yAxis: {
+        type: 'value',
+        name: yAxisLabel
+      },
+      series: [
+        {
+          name: 'Mean',
+          type: 'line',
+          data: meanData,
+          smooth: true,
+          itemStyle: { color: '#0ea5e9' },
+          lineStyle: { width: 3 }
+        },
+        {
+          name: 'P50 (Median)',
+          type: 'line',
+          data: p50Data,
+          smooth: true,
+          itemStyle: { color: '#10b981' },
+          lineStyle: { width: 2, type: 'dashed' }
+        },
+        {
+          name: 'P90',
+          type: 'line',
+          data: p90Data,
+          smooth: true,
+          itemStyle: { color: '#f59e0b' },
+          lineStyle: { width: 2, type: 'dotted' }
+        },
+        {
+          name: 'P95',
+          type: 'line',
+          data: p95Data,
+          smooth: true,
+          itemStyle: { color: '#ef4444' },
+          lineStyle: { width: 2, type: 'dotted' }
+        },
+        {
+          name: 'P99',
+          type: 'line',
+          data: p99Data,
+          smooth: true,
+          itemStyle: { color: '#dc2626' },
+          lineStyle: { width: 2, type: 'dotted' }
+        }
+      ]
+    };
+
+    myChart.setOption(option);
+
+    // Make chart responsive
+    window.addEventListener('resize', () => {
+      myChart.resize();
+    });
+  });
+</script>

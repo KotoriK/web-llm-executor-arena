@@ -1,0 +1,167 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { loadSummaryData, loadAggregatedResults } from '../lib/data';
+import PerformanceChart from '../components/PerformanceChart.astro';
+
+const summary = await loadSummaryData();
+const aggregated = await loadAggregatedResults();
+---
+
+<Layout title="Web LLM Executor Arena - Home">
+  <div class="space-y-8">
+    <!-- Hero Section -->
+    <div class="bg-white rounded-lg shadow-sm p-8 border border-gray-200">
+      <h1 class="text-4xl font-bold text-gray-900 mb-4">
+        Web LLM Executor Arena
+      </h1>
+      <p class="text-xl text-gray-600 mb-6">
+        Performance benchmarking for client-side LLM runtimes
+      </p>
+      <p class="text-gray-700 mb-4">
+        Compare performance metrics across multiple client-side LLM runtimes including 
+        <span class="font-semibold">@wllama/wllama</span>, 
+        <span class="font-semibold">@mlc-ai/web-llm</span>, 
+        <span class="font-semibold">@huggingface/transformers</span>, and 
+        <span class="font-semibold">@mediapipe/tasks-genai</span>.
+      </p>
+      <div class="flex gap-4">
+        <a href="/comparison" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 transition-colors">
+          View Comparison
+        </a>
+        <a href="/runtimes" class="inline-flex items-center px-6 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition-colors">
+          Runtime Details
+        </a>
+      </div>
+    </div>
+
+    <!-- Summary Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+        <div class="flex items-center">
+          <div class="flex-1">
+            <p class="text-sm font-medium text-gray-500 uppercase">Total Test Results</p>
+            <p class="mt-2 text-3xl font-bold text-gray-900">{summary.totalResults}</p>
+          </div>
+          <div class="ml-4">
+            <svg class="h-12 w-12 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+        <div class="flex items-center">
+          <div class="flex-1">
+            <p class="text-sm font-medium text-gray-500 uppercase">Runtimes Tested</p>
+            <p class="mt-2 text-3xl font-bold text-gray-900">{summary.runtimesTested}</p>
+          </div>
+          <div class="ml-4">
+            <svg class="h-12 w-12 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+        <div class="flex items-center">
+          <div class="flex-1">
+            <p class="text-sm font-medium text-gray-500 uppercase">Best Performance</p>
+            <p class="mt-2 text-xl font-bold text-gray-900">{summary.topPerformers.fastestTokensPerSec.runtime}</p>
+            <p class="text-sm text-gray-600">{summary.topPerformers.fastestTokensPerSec.value.toFixed(1)} t/s</p>
+          </div>
+          <div class="ml-4">
+            <svg class="h-12 w-12 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top Performers -->
+    <div class="bg-white rounded-lg shadow-sm p-8 border border-gray-200">
+      <h2 class="text-2xl font-bold text-gray-900 mb-6">🏆 Top Performers</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="border-l-4 border-primary-500 pl-4">
+          <p class="text-sm font-medium text-gray-500">Fastest Throughput</p>
+          <p class="mt-1 text-2xl font-bold text-gray-900">{summary.topPerformers.fastestTokensPerSec.runtime}</p>
+          <p class="mt-1 text-sm text-gray-600">{summary.topPerformers.fastestTokensPerSec.value.toFixed(1)} tokens/sec</p>
+        </div>
+        <div class="border-l-4 border-green-500 pl-4">
+          <p class="text-sm font-medium text-gray-500">Fastest First Token</p>
+          <p class="mt-1 text-2xl font-bold text-gray-900">{summary.topPerformers.fastestTTFT.runtime}</p>
+          <p class="mt-1 text-sm text-gray-600">{summary.topPerformers.fastestTTFT.value.toFixed(0)} ms</p>
+        </div>
+        <div class="border-l-4 border-yellow-500 pl-4">
+          <p class="text-sm font-medium text-gray-500">Fastest Model Load</p>
+          <p class="mt-1 text-2xl font-bold text-gray-900">{summary.topPerformers.fastestLoad.runtime}</p>
+          <p class="mt-1 text-sm text-gray-600">{(summary.topPerformers.fastestLoad.value / 1000).toFixed(0)} seconds</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Performance Chart -->
+    <div class="bg-white rounded-lg shadow-sm p-8 border border-gray-200">
+      <PerformanceChart 
+        id="overview-chart" 
+        data={aggregated}
+        title="Performance Overview"
+      />
+    </div>
+
+    <!-- Key Metrics Table -->
+    <div class="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200">
+      <div class="px-8 py-6 border-b border-gray-200">
+        <h2 class="text-2xl font-bold text-gray-900">Quick Comparison</h2>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Runtime</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Backend</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Load Time</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">TTFT</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Throughput</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            {aggregated.map((item) => (
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm font-medium text-gray-900">{item.runtime}</div>
+                  <div class="text-sm text-gray-500">{item.quantization}</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{item.backend}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{(item.loadTime.mean / 1000).toFixed(1)}s</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{item.ttft.mean.toFixed(0)}ms</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{item.tokensPerSecond.mean.toFixed(1)} t/s</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div class="px-8 py-4 bg-gray-50 border-t border-gray-200">
+        <a href="/comparison" class="text-primary-600 hover:text-primary-700 text-sm font-medium">
+          View Detailed Comparison →
+        </a>
+      </div>
+    </div>
+
+    <!-- Test Information -->
+    <div class="bg-blue-50 rounded-lg shadow-sm p-6 border border-blue-200">
+      <h3 class="text-lg font-semibold text-blue-900 mb-2">📊 About These Tests</h3>
+      <p class="text-blue-800 text-sm mb-3">
+        All tests use the <strong>Qwen2.5-0.5B-Instruct</strong> model with comparable quantization levels across runtimes.
+        Tests are conducted using Playwright automation on consistent hardware with multiple browsers.
+      </p>
+      <ul class="text-blue-800 text-sm space-y-1 list-disc list-inside">
+        <li><strong>Load Time:</strong> Time to download and initialize the model</li>
+        <li><strong>TTFT:</strong> Time to First Token - latency before generation starts</li>
+        <li><strong>Throughput:</strong> Tokens generated per second during streaming</li>
+      </ul>
+    </div>
+  </div>
+</Layout>

@@ -1,0 +1,165 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { loadAggregatedResults } from '../lib/data';
+import PercentilesChart from '../components/PercentilesChart.astro';
+import PerformanceChart from '../components/PerformanceChart.astro';
+
+const aggregated = await loadAggregatedResults();
+---
+
+<Layout title="Runtime Comparison - Web LLM Executor Arena" description="Detailed performance comparison of client-side LLM runtimes">
+  <div class="space-y-8">
+    <!-- Page Header -->
+    <div>
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">Runtime Comparison</h1>
+      <p class="text-gray-600">Comprehensive performance analysis across all tested runtimes</p>
+    </div>
+
+    <!-- Performance Overview -->
+    <div class="bg-white rounded-lg shadow-sm p-8 border border-gray-200">
+      <PerformanceChart 
+        id="comparison-overview" 
+        data={aggregated}
+        title="Performance Overview - All Metrics"
+      />
+    </div>
+
+    <!-- Tokens Per Second Analysis -->
+    <div class="bg-white rounded-lg shadow-sm p-8 border border-gray-200">
+      <PercentilesChart 
+        id="tps-percentiles" 
+        data={aggregated}
+        metric="tokensPerSecond"
+        title="Throughput (Tokens/Second) - Percentile Distribution"
+      />
+      <div class="mt-4 text-sm text-gray-600">
+        <p><strong>Higher is better.</strong> Shows how many tokens are generated per second during inference. P90+ values indicate worst-case scenarios.</p>
+      </div>
+    </div>
+
+    <!-- TTFT Analysis -->
+    <div class="bg-white rounded-lg shadow-sm p-8 border border-gray-200">
+      <PercentilesChart 
+        id="ttft-percentiles" 
+        data={aggregated}
+        metric="ttft"
+        title="Time to First Token (TTFT) - Percentile Distribution"
+      />
+      <div class="mt-4 text-sm text-gray-600">
+        <p><strong>Lower is better.</strong> Measures latency before the first token is generated. Critical for user experience.</p>
+      </div>
+    </div>
+
+    <!-- Load Time Analysis -->
+    <div class="bg-white rounded-lg shadow-sm p-8 border border-gray-200">
+      <PercentilesChart 
+        id="load-percentiles" 
+        data={aggregated}
+        metric="loadTime"
+        title="Model Load Time - Percentile Distribution"
+      />
+      <div class="mt-4 text-sm text-gray-600">
+        <p><strong>Lower is better.</strong> Time required to download and initialize the model. Includes network transfer and compilation time.</p>
+      </div>
+    </div>
+
+    <!-- Detailed Comparison Table -->
+    <div class="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200">
+      <div class="px-8 py-6 border-b border-gray-200">
+        <h2 class="text-2xl font-bold text-gray-900">Detailed Statistics</h2>
+        <p class="text-sm text-gray-600 mt-1">Mean values with standard deviation and percentiles</p>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Runtime</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Backend</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Metric</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mean ± StdDev</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">P50</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">P90</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">P95</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">P99</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            {aggregated.map((item) => (
+              <>
+                <!-- Tokens Per Second -->
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-6 py-4 whitespace-nowrap" rowspan="3">
+                    <div class="text-sm font-medium text-gray-900">{item.runtime}</div>
+                    <div class="text-sm text-gray-500">{item.quantization}</div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700" rowspan="3">{item.backend}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-700">Tokens/sec</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                    {item.tokensPerSecond.mean.toFixed(1)} ± {item.tokensPerSecond.stdDev.toFixed(1)}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{item.tokensPerSecond.p50.toFixed(1)}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{item.tokensPerSecond.p90.toFixed(1)}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{item.tokensPerSecond.p95.toFixed(1)}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{item.tokensPerSecond.p99.toFixed(1)}</td>
+                </tr>
+                <!-- TTFT -->
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-700">TTFT (ms)</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                    {item.ttft.mean.toFixed(0)} ± {item.ttft.stdDev.toFixed(0)}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{item.ttft.p50.toFixed(0)}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{item.ttft.p90.toFixed(0)}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{item.ttft.p95.toFixed(0)}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{item.ttft.p99.toFixed(0)}</td>
+                </tr>
+                <!-- Load Time -->
+                <tr class="hover:bg-gray-50 transition-colors border-b-2 border-gray-300">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-700">Load (s)</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                    {(item.loadTime.mean / 1000).toFixed(1)} ± {(item.loadTime.stdDev / 1000).toFixed(1)}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{(item.loadTime.p50 / 1000).toFixed(1)}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{(item.loadTime.p90 / 1000).toFixed(1)}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{(item.loadTime.p95 / 1000).toFixed(1)}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{(item.loadTime.p99 / 1000).toFixed(1)}</td>
+                </tr>
+              </>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Interpretation Guide -->
+    <div class="bg-gray-50 rounded-lg shadow-sm p-6 border border-gray-200">
+      <h3 class="text-lg font-semibold text-gray-900 mb-3">📖 How to Read These Charts</h3>
+      <div class="space-y-3 text-sm text-gray-700">
+        <div>
+          <strong class="text-gray-900">Mean:</strong> Average value across all test runs. Good for overall performance assessment.
+        </div>
+        <div>
+          <strong class="text-gray-900">P50 (Median):</strong> Middle value - 50% of results are better, 50% are worse. More robust than mean.
+        </div>
+        <div>
+          <strong class="text-gray-900">P90/P95/P99:</strong> Tail latencies - 90%/95%/99% of results are better than this. Important for worst-case scenarios.
+        </div>
+        <div>
+          <strong class="text-gray-900">Standard Deviation:</strong> Measure of variability. Lower values indicate more consistent performance.
+        </div>
+      </div>
+    </div>
+
+    <!-- Browser & Environment Info -->
+    <div class="bg-yellow-50 rounded-lg shadow-sm p-6 border border-yellow-200">
+      <h3 class="text-lg font-semibold text-yellow-900 mb-2">⚠️ Performance Considerations</h3>
+      <ul class="text-yellow-800 text-sm space-y-2 list-disc list-inside">
+        <li>Performance varies significantly based on hardware (CPU, GPU, RAM)</li>
+        <li>Browser support affects backend availability (WebGPU requires Chrome 113+)</li>
+        <li>First-run performance includes model download time (subsequent runs use cache)</li>
+        <li>WebGPU generally provides 2-5x better throughput than WASM on compatible hardware</li>
+        <li>Model quantization affects both performance and output quality</li>
+      </ul>
+    </div>
+  </div>
+</Layout>

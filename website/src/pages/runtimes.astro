@@ -1,0 +1,251 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const runtimes = [
+  {
+    name: '@wllama/wllama',
+    backend: 'llama.cpp WASM',
+    github: 'https://github.com/ngxson/wllama',
+    model: 'Qwen2.5-0.5B-Instruct-q8_0.gguf',
+    modelSize: '~500MB',
+    quantization: 'Q8',
+    features: {
+      wasmSimd: '✅ Full Support',
+      webgpu: '❌ Not Supported',
+      webnn: '❌ Not Supported',
+    },
+    pros: ['Excellent WASM SIMD optimization', 'Broad browser compatibility', 'Reliable performance'],
+    cons: ['No GPU acceleration', 'Lower throughput vs WebGPU runtimes'],
+    bestFor: 'Cross-browser compatibility, CPU-only environments',
+  },
+  {
+    name: '@mlc-ai/web-llm',
+    backend: 'TVM (WebGPU/WASM)',
+    github: 'https://github.com/mlc-ai/web-llm',
+    model: 'Qwen2.5-0.5B-Instruct-q0f32-MLC',
+    modelSize: '~1GB',
+    quantization: 'Q0F32',
+    features: {
+      wasmSimd: '✅ Fallback',
+      webgpu: '✅ Primary',
+      webnn: '❌ Not Supported',
+    },
+    pros: ['Best throughput with WebGPU', 'Low TTFT latency', 'Automatic backend selection'],
+    cons: ['Larger model size', 'Longer compile time', 'WebGPU browser requirements'],
+    bestFor: 'Maximum performance on WebGPU-capable browsers',
+  },
+  {
+    name: '@huggingface/transformers',
+    backend: 'ONNX Runtime',
+    github: 'https://huggingface.co/docs/transformers.js',
+    model: 'Qwen2.5-0.5B-Instruct (FP32)',
+    modelSize: '~500MB',
+    quantization: 'FP32',
+    features: {
+      wasmSimd: '✅ Full Support',
+      webgpu: '✅ Full Support',
+      webnn: '⚠️ Experimental',
+    },
+    pros: ['Multi-backend support', 'Fast model loading', 'Extensive model ecosystem'],
+    cons: ['Variable performance across backends', 'WebNN still experimental'],
+    bestFor: 'Flexibility across multiple backends and model choices',
+  },
+  {
+    name: '@mediapipe/tasks-genai',
+    backend: 'TensorFlow Lite',
+    github: 'https://ai.google.dev/edge/mediapipe/solutions/genai/llm_inference/web_js',
+    model: 'Qwen2.5-0.5B-Instruct (INT8)',
+    modelSize: '~150MB',
+    quantization: 'INT8',
+    features: {
+      wasmSimd: '⚠️ Limited',
+      webgpu: '✅ Full Support',
+      webnn: '❌ Not Supported',
+    },
+    pros: ['Smallest model size', 'Good mobile performance', 'WebGPU acceleration'],
+    cons: ['Limited model format support', 'Sequence length restrictions'],
+    bestFor: 'Mobile devices, bandwidth-constrained environments',
+  },
+];
+---
+
+<Layout title="Runtime Details - Web LLM Executor Arena" description="Detailed information about each client-side LLM runtime">
+  <div class="space-y-8">
+    <!-- Page Header -->
+    <div>
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">Runtime Details</h1>
+      <p class="text-gray-600">In-depth look at each tested runtime's capabilities and characteristics</p>
+    </div>
+
+    <!-- Technology Support Matrix -->
+    <div class="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200">
+      <div class="px-8 py-6 border-b border-gray-200">
+        <h2 class="text-2xl font-bold text-gray-900">Technology Support Matrix</h2>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Runtime</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">WASM SIMD</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">WebGPU</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">WebNN</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Primary Backend</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            {runtimes.map((runtime) => (
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{runtime.name}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{runtime.features.wasmSimd}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{runtime.features.webgpu}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{runtime.features.webnn}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{runtime.backend}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Runtime Cards -->
+    {runtimes.map((runtime) => (
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+        <div class="bg-gradient-to-r from-primary-500 to-primary-600 px-8 py-6">
+          <h3 class="text-2xl font-bold text-white">{runtime.name}</h3>
+          <p class="text-primary-100 mt-1">{runtime.backend}</p>
+        </div>
+        
+        <div class="px-8 py-6 space-y-6">
+          <!-- Model Info -->
+          <div>
+            <h4 class="text-sm font-semibold text-gray-500 uppercase mb-2">Test Configuration</h4>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <p class="text-xs text-gray-500">Model</p>
+                <p class="text-sm font-medium text-gray-900">{runtime.model}</p>
+              </div>
+              <div>
+                <p class="text-xs text-gray-500">Quantization</p>
+                <p class="text-sm font-medium text-gray-900">{runtime.quantization}</p>
+              </div>
+              <div>
+                <p class="text-xs text-gray-500">Model Size</p>
+                <p class="text-sm font-medium text-gray-900">{runtime.modelSize}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Technology Support -->
+          <div>
+            <h4 class="text-sm font-semibold text-gray-500 uppercase mb-2">Technology Support</h4>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <p class="text-xs text-gray-500">WASM SIMD</p>
+                <p class="text-sm font-medium text-gray-900">{runtime.features.wasmSimd}</p>
+              </div>
+              <div>
+                <p class="text-xs text-gray-500">WebGPU</p>
+                <p class="text-sm font-medium text-gray-900">{runtime.features.webgpu}</p>
+              </div>
+              <div>
+                <p class="text-xs text-gray-500">WebNN</p>
+                <p class="text-sm font-medium text-gray-900">{runtime.features.webnn}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pros & Cons -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <h4 class="text-sm font-semibold text-green-600 uppercase mb-2">✓ Strengths</h4>
+              <ul class="space-y-1">
+                {runtime.pros.map((pro) => (
+                  <li class="text-sm text-gray-700 flex items-start">
+                    <svg class="h-5 w-5 text-green-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                    </svg>
+                    {pro}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h4 class="text-sm font-semibold text-orange-600 uppercase mb-2">⚠ Considerations</h4>
+              <ul class="space-y-1">
+                {runtime.cons.map((con) => (
+                  <li class="text-sm text-gray-700 flex items-start">
+                    <svg class="h-5 w-5 text-orange-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                    </svg>
+                    {con}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          <!-- Best For -->
+          <div class="bg-blue-50 rounded-lg p-4 border border-blue-200">
+            <p class="text-sm font-medium text-blue-900 mb-1">💡 Best For</p>
+            <p class="text-sm text-blue-800">{runtime.bestFor}</p>
+          </div>
+
+          <!-- Links -->
+          <div class="pt-4 border-t border-gray-200">
+            <a href={runtime.github} target="_blank" rel="noopener noreferrer" 
+               class="inline-flex items-center text-primary-600 hover:text-primary-700 text-sm font-medium">
+              <svg class="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" />
+              </svg>
+              View on GitHub / Documentation
+            </a>
+          </div>
+        </div>
+      </div>
+    ))}
+
+    <!-- Browser Support -->
+    <div class="bg-white rounded-lg shadow-sm p-8 border border-gray-200">
+      <h2 class="text-2xl font-bold text-gray-900 mb-4">Browser Support</h2>
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Runtime</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Chrome 113+</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Firefox 89+</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Safari 16.4+</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">wllama</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-green-600">✅ WASM SIMD</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-green-600">✅ WASM SIMD</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-green-600">✅ WASM SIMD</td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">web-llm</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-green-600">✅ WebGPU</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-yellow-600">⚠️ WASM fallback</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-yellow-600">⚠️ WASM fallback</td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">transformers</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-green-600">✅ WASM/WebGPU</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-green-600">✅ WASM</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-green-600">✅ WASM</td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">mediapipe</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-green-600">✅ TFLite/WebGPU</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-green-600">✅ TFLite</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-green-600">✅ TFLite</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</Layout>

@@ -1,0 +1,220 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="About - Web LLM Executor Arena" description="Learn about the Web LLM Executor Arena benchmarking project">
+  <div class="space-y-8">
+    <!-- Page Header -->
+    <div>
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">About This Project</h1>
+      <p class="text-gray-600">Learn about the Web LLM Executor Arena benchmarking initiative</p>
+    </div>
+
+    <!-- Project Overview -->
+    <div class="bg-white rounded-lg shadow-sm p-8 border border-gray-200">
+      <h2 class="text-2xl font-bold text-gray-900 mb-4">Project Overview</h2>
+      <div class="prose max-w-none text-gray-700 space-y-4">
+        <p>
+          The <strong>Web LLM Executor Arena</strong> provides comprehensive performance benchmarking for client-side Large Language Model (LLM) runtimes. 
+          Our goal is to help developers make informed decisions when choosing a runtime for their web applications.
+        </p>
+        <p>
+          We test multiple popular runtimes including @wllama/wllama, @mlc-ai/web-llm, @huggingface/transformers, and @mediapipe/tasks-genai, 
+          measuring key performance metrics such as model load time, time to first token (TTFT), and throughput (tokens per second).
+        </p>
+        <p>
+          All tests use the <strong>Qwen2.5-0.5B-Instruct</strong> model with comparable quantization levels, ensuring fair comparisons across runtimes.
+        </p>
+      </div>
+    </div>
+
+    <!-- Testing Methodology -->
+    <div class="bg-white rounded-lg shadow-sm p-8 border border-gray-200">
+      <h2 class="text-2xl font-bold text-gray-900 mb-4">Testing Methodology</h2>
+      <div class="space-y-6">
+        <div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">Test Environment</h3>
+          <ul class="list-disc list-inside space-y-2 text-gray-700">
+            <li>Automated testing using <strong>Playwright</strong> across multiple browsers</li>
+            <li>Consistent hardware configuration for all tests</li>
+            <li>Multiple test runs to capture statistical distribution</li>
+            <li>Comprehensive environment detection (platform, browser, capabilities)</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">Metrics Captured</h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="border-l-4 border-primary-500 pl-4">
+              <p class="font-semibold text-gray-900">Load Time</p>
+              <p class="text-sm text-gray-600">Time to download and initialize the model, including network transfer and compilation</p>
+            </div>
+            <div class="border-l-4 border-green-500 pl-4">
+              <p class="font-semibold text-gray-900">Time to First Token (TTFT)</p>
+              <p class="text-sm text-gray-600">Latency before generation starts - critical for user experience</p>
+            </div>
+            <div class="border-l-4 border-yellow-500 pl-4">
+              <p class="font-semibold text-gray-900">Throughput</p>
+              <p class="text-sm text-gray-600">Tokens generated per second during streaming inference</p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">Statistical Analysis</h3>
+          <p class="text-gray-700 mb-2">For each metric, we calculate:</p>
+          <ul class="list-disc list-inside space-y-1 text-gray-700">
+            <li><strong>Mean:</strong> Average value across all test runs</li>
+            <li><strong>Median (P50):</strong> Middle value - more robust than mean</li>
+            <li><strong>Standard Deviation:</strong> Measure of performance variability</li>
+            <li><strong>Percentiles (P90, P95, P99):</strong> Tail latencies for worst-case scenarios</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Technology Stack -->
+    <div class="bg-white rounded-lg shadow-sm p-8 border border-gray-200">
+      <h2 class="text-2xl font-bold text-gray-900 mb-4">Technology Stack</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-3">Testing Framework</h3>
+          <ul class="space-y-2 text-gray-700">
+            <li class="flex items-start">
+              <svg class="h-5 w-5 text-primary-500 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+              </svg>
+              <div>
+                <strong>Playwright:</strong> Multi-browser automation
+              </div>
+            </li>
+            <li class="flex items-start">
+              <svg class="h-5 w-5 text-primary-500 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+              </svg>
+              <div>
+                <strong>TypeScript:</strong> Type-safe test implementation
+              </div>
+            </li>
+            <li class="flex items-start">
+              <svg class="h-5 w-5 text-primary-500 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+              </svg>
+              <div>
+                <strong>Vite:</strong> Fast development builds
+              </div>
+            </li>
+            <li class="flex items-start">
+              <svg class="h-5 w-5 text-primary-500 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+              </svg>
+              <div>
+                <strong>pnpm Workspaces:</strong> Monorepo structure
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-3">Data & Visualization</h3>
+          <ul class="space-y-2 text-gray-700">
+            <li class="flex items-start">
+              <svg class="h-5 w-5 text-primary-500 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+              </svg>
+              <div>
+                <strong>JSON Schema:</strong> Data validation
+              </div>
+            </li>
+            <li class="flex items-start">
+              <svg class="h-5 w-5 text-primary-500 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+              </svg>
+              <div>
+                <strong>Node.js Scripts:</strong> Data processing & aggregation
+              </div>
+            </li>
+            <li class="flex items-start">
+              <svg class="h-5 w-5 text-primary-500 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+              </svg>
+              <div>
+                <strong>Astro:</strong> Static site generation
+              </div>
+            </li>
+            <li class="flex items-start">
+              <svg class="h-5 w-5 text-primary-500 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+              </svg>
+              <div>
+                <strong>Apache ECharts:</strong> Interactive charts
+              </div>
+            </li>
+            <li class="flex items-start">
+              <svg class="h-5 w-5 text-primary-500 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+              </svg>
+              <div>
+                <strong>TailwindCSS:</strong> Modern styling
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tested Runtimes -->
+    <div class="bg-white rounded-lg shadow-sm p-8 border border-gray-200">
+      <h2 class="text-2xl font-bold text-gray-900 mb-4">Tested Runtimes</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="border border-gray-200 rounded-lg p-4">
+          <h3 class="font-semibold text-gray-900 mb-1">@wllama/wllama</h3>
+          <p class="text-sm text-gray-600">llama.cpp compiled to WebAssembly with SIMD optimization</p>
+        </div>
+        <div class="border border-gray-200 rounded-lg p-4">
+          <h3 class="font-semibold text-gray-900 mb-1">@mlc-ai/web-llm</h3>
+          <p class="text-sm text-gray-600">TVM-based runtime with WebGPU acceleration</p>
+        </div>
+        <div class="border border-gray-200 rounded-lg p-4">
+          <h3 class="font-semibold text-gray-900 mb-1">@huggingface/transformers</h3>
+          <p class="text-sm text-gray-600">ONNX Runtime with multi-backend support</p>
+        </div>
+        <div class="border border-gray-200 rounded-lg p-4">
+          <h3 class="font-semibold text-gray-900 mb-1">@mediapipe/tasks-genai</h3>
+          <p class="text-sm text-gray-600">TensorFlow Lite optimized for edge devices</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contributing -->
+    <div class="bg-gradient-to-r from-primary-50 to-blue-50 rounded-lg shadow-sm p-8 border border-primary-200">
+      <h2 class="text-2xl font-bold text-gray-900 mb-4">Contributing</h2>
+      <p class="text-gray-700 mb-4">
+        This is an open-source project and we welcome contributions! Whether you want to:
+      </p>
+      <ul class="list-disc list-inside space-y-2 text-gray-700 mb-6">
+        <li>Add support for new runtimes</li>
+        <li>Improve testing methodology</li>
+        <li>Enhance data visualization</li>
+        <li>Report issues or suggest features</li>
+      </ul>
+      <p class="text-gray-700 mb-4">
+        Visit our <a href="https://github.com/KotoriK/web-llm-executor-arena" class="text-primary-600 hover:text-primary-700 font-medium" target="_blank" rel="noopener noreferrer">GitHub repository</a> to get started.
+      </p>
+      <p class="text-sm text-gray-600">
+        Check out <code class="bg-white px-2 py-1 rounded">CONTRIBUTING.md</code> for detailed guidelines on how to contribute to the project.
+      </p>
+    </div>
+
+    <!-- License & Credits -->
+    <div class="bg-white rounded-lg shadow-sm p-8 border border-gray-200">
+      <h2 class="text-2xl font-bold text-gray-900 mb-4">License & Credits</h2>
+      <p class="text-gray-700 mb-4">
+        This project is licensed under the <strong>MIT License</strong>. See the LICENSE file for details.
+      </p>
+      <p class="text-gray-700">
+        Special thanks to all the runtime developers and the open-source community for making client-side LLM inference possible.
+      </p>
+    </div>
+  </div>
+</Layout>
